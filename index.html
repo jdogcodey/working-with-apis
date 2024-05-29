@@ -1,12 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <title>Document</title>
+    <meta charset="UTF-8">
+    <title>Document</title>
 </head>
+
 <body>
-  <img src="#">
-  <script>
-  </script>
+    <img src="#">
+    <form>
+        <input id="search" type="search" placeholder="What do you want a GIF of?">
+        <button id="change">Change Image</button>
+    </form>
+    <script>
+        (() => {
+            function getImage(search){const img = document.querySelector('img');
+            fetch(`https://api.giphy.com/v1/gifs/translate?api_key=pXCr6m97RbGviVOVJrXF3MN0H4zpkwcV&s=${search}`, { mode: 'cors' })
+                .then(function (response) {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(function (response) {
+                    img.src = response.data.images.original.url;
+                })
+                .catch(function (error) {
+                    console.log('ERROR fetching GIF')
+                })
+            }
+            const changeButton = document.getElementById('change');
+            const searchBox = document.getElementById('search');
+            changeButton.addEventListener('click', () => {
+                event.preventDefault();
+                getImage(searchBox.value)
+            })
+            getImage(`cat`);
+        })();
+    </script>
 </body>
+
 </html>
